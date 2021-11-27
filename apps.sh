@@ -90,8 +90,9 @@ install_terraform(){
 
 install_vscode(){
   if ! command -v code &> /dev/null; then
+	cd /tmp
         curl -LO https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64 
-        dpkg -i 
+        sudo dpkg -i vscode-linux-x64.deb
   fi
   echo "code exists"
 }
@@ -110,3 +111,16 @@ install_curl(){
   echo "curl exists"
 }
 
+install_fish(){
+  if ! command -v fish &> /dev/null; then
+        sudo apt-get install -y fish
+  fi
+  echo "curl exists"
+}
+
+install_stow(){
+  if ! command -v stow &> /dev/null; then
+        sudo apt-get install -y stow
+  fi
+  echo "curl exists"
+}
