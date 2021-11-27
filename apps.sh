@@ -118,9 +118,24 @@ install_fish(){
   echo "curl exists"
 }
 
+install_rofi(){
+  if ! command -v rofi &> /dev/null; then
+        sudo apt-get install -y rofi
+  fi
+  echo "rofi exists"
+}
+
+
 install_stow(){
   if ! command -v stow &> /dev/null; then
         sudo apt-get install -y stow
   fi
   echo "curl exists"
+}
+
+install_ulauncher(){
+  if ! command -v ulauncher&> /dev/null; then
+	sudo add-apt-repository ppa:agornostal/ulauncher && sudo apt update && sudo apt install -y ulauncher
+  fi
+  echo "ulauncher exists"
 }
