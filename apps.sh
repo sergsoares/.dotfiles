@@ -139,3 +139,12 @@ install_ulauncher(){
   fi
   echo "ulauncher exists"
 }
+
+install_autojump(){
+  if ! command -v autojump&> /dev/null; then
+    sudo apt-get install autojump
+  fi
+  echo "autojump exists"
+}
+
+
