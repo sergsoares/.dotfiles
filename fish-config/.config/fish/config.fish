@@ -11,6 +11,8 @@ alias tv='terraform show -json plan.out > plan.json  && terraform-visual --plan 
 alias tpv='terraform plan -out=plan.out && terraform show -json plan.out > plan.json  && terraform-visual --plan plan.json && xdg-open terraform-visual-report/index.html'
 alias tap='terraform apply plan.out'
 alias c='code .'
+alias i='sudo apt install'
+
 
 begin
     set --local AUTOJUMP_PATH /usr/share/autojump/autojump.fish
