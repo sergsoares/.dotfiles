@@ -20,6 +20,10 @@ alias gt='git status'
 alias gd='git diff'
 
 
+alias v='vagrant'
+alias ed='code ~/.dotfiles'
+
+
 # Issue that work for add path for Fish Shell
 # https://github.com/fish-shell/fish-shell/issues/527
 set PATH $HOME/.arkade/bin/ $PATH
