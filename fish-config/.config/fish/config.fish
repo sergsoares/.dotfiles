@@ -27,3 +27,8 @@ alias ed='code ~/.dotfiles'
 # Issue that work for add path for Fish Shell
 # https://github.com/fish-shell/fish-shell/issues/527
 set PATH $HOME/.arkade/bin/ $PATH
+
+
+# Adding Golango to Fish Shell
+set -x GOPATH $HOME/go
+set -x PATH $PATH /usr/local/go/bin $GOPATH/bin
