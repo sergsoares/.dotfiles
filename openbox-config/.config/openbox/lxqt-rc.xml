@@ -129,7 +129,7 @@
     <number>2</number>
     <firstdesk>1</firstdesk>
     <names>
-      <name>home</name>
+      <name>main</name>
       <name>lab</name>
     </names>
     <popupTime>875</popupTime>
@@ -256,7 +256,7 @@
           <action name="Raise"/>
           <action name="Unshade"/>
         </finalactions>
-        <allDesktops>yes</allDesktops>
+        <allDesktops>no</allDesktops>
       </action>
     </keybind>
     <keybind key="A-S-Tab">
@@ -266,7 +266,7 @@
           <action name="Raise"/>
           <action name="Unshade"/>
         </finalactions>
-        <allDesktops>yes</allDesktops>
+        <allDesktops>no</allDesktops>
       </action>
     </keybind>
     <!-- Keybindings for window switching with the arrow keys -->
