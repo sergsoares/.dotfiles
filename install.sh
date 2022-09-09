@@ -1,8 +1,7 @@
 #!/bin/bash
 
-echo "source ~/.dotfiles/init" >> ~/.bashrc
-echo "source ~/.dotfiles/apps.sh" >> ~/.bashrc
-echo "source ~/.dotfiles/commands.sh" >> ~/.bashrc
+cp ~/.bashrc ~/.bashrc.bkp
+echo "source ~/.dotfiles/.bashrc" > ~/.bashrc
 
 
 
