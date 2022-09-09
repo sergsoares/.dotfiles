@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+FOLDER=$(ls ~/tasks | fzf )
+TARGET="/Users/sergsoares/tasks/${FOLDER}"
+
+code "${TARGET}"
