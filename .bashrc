@@ -3,8 +3,8 @@
 #PS1=`whoami`' $PWD \n~> ' ; export PS1
 PS1='${PWD##*/} $ '
 
-alias edit="vim ~/.bashrc"
-alias e="vim ~/.bashrc"
+alias edit="vim ~/.dotfiles/.bashrc"
+alias e="vim ~/.dotfiles/.bashrc"
 alias t=terraform
 alias tap="terraform apply"
 alias ti="terraform init"

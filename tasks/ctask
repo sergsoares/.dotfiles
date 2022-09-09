@@ -6,7 +6,7 @@ read -p 'Name of task: '
 TRIM=$(echo $REPLY | sed -e 's/\s$//g')
 NAME=$(echo "${TRIM// /-}")
 
-TARGET=$(echo "/Users/sergsoares/tasks/${NAME}")
+TARGET=$(echo "${HOME}/tasks/${NAME}")
 
 if [ -d "${TARGET}" ] 
 then

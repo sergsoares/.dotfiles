@@ -2,6 +2,6 @@
 set -e
 
 FOLDER=$(ls ~/tasks | fzf )
-TARGET="/Users/sergsoares/tasks/${FOLDER}"
+TARGET="${HOME}/tasks/${FOLDER}"
 
 code "${TARGET}"
