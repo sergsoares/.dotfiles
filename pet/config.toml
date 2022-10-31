@@ -1,5 +1,5 @@
 [General]
-  snippetfile = "/Users/parfin/.config/pet/snippet.toml"
+  snippetfile = "$HOME/.dotfiles/pet/snippet.toml"
   editor = "vim"
   column = 40
   selectcmd = "fzf"

@@ -1,0 +1,4 @@
+[[snippets]]
+  description = "Show message"
+  command = "echo <msg>"
+  output = ""

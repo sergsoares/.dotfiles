@@ -15,8 +15,14 @@ alias gs="git status"
 alias gt="git tag"
 
 alias b=bash
-alias p="pet --config $HOME/.dotfiles/pet/config.toml"
 alias pc="pwd | pbcopy"
+
+# Pet aliases
+alias p="pet --config $HOME/.dotfiles/pet/config.toml"
+alias pse="pet --config $HOME/.dotfiles/pet/config.toml search"
+alias pex="pet --config $HOME/.dotfiles/pet/config.toml search"
+
+
 
 alias d=dig
 alias wkpo="watch kubectl get pods"
