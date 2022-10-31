@@ -16,6 +16,7 @@ alias gt="git tag"
 
 alias b=bash
 alias p=pwd
+alias pc="pwd | pbcopy"
 
 alias d=dig
 alias wkpo="watch kubectl get pods"
@@ -69,6 +70,10 @@ k8s_context(){
 #PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
 
 source ~/.pwork
+
+code() {
+   open -a Visual\ Studio\ Code.app $1
+}
 
 export PATH=/usr/local/bin:$PATH
 export PATH=~/.dotfiles/tasks:$PATH
