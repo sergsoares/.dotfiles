@@ -15,7 +15,7 @@ alias gs="git status"
 alias gt="git tag"
 
 alias b=bash
-alias p=pwd
+alias p="pet --config $HOME/.dotfiles/pet/config.toml"
 alias pc="pwd | pbcopy"
 
 alias d=dig
