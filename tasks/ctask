@@ -16,6 +16,9 @@ else
   if [ "$REPLY" == "yes" ]; then
     echo "Creating folder"
     mkdir -p "${TARGET}"
+    echo "# Tasks" > "${TARGET}/tasks.xit"
+    echo "# References" > "${TARGET}/refs.md"
+    echo "# Draft" > "${TARGET}/draft.md"
     code "${TARGET}"
   fi
 fi
