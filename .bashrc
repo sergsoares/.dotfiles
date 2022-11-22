@@ -1,7 +1,15 @@
 #fish
 
 #PS1=`whoami`' $PWD \n~> ' ; export PS1
-PS1='${PWD##*/} $ '
+PS1='\n\n${PWD##*/} ~> '
+
+PS1="\[\033[01;32m\]${PS1}\[\033[0m\]"
+
+
+
+#NL='
+#'
+#PS1=${PS1}${NL}
 
 alias edit="vim ~/.dotfiles/.bashrc"
 alias e="vim ~/.dotfiles/.bashrc"
