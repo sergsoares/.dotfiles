@@ -26,6 +26,7 @@ alias ls=exa
 
 alias b=bash
 alias path="pwd | pbcopy"
+alias v=vim
 
 # Pet aliases
 alias p="pet --config $HOME/.dotfiles/pet/config.toml"
