@@ -17,10 +17,12 @@ alias t=terraform
 alias tap="terraform apply"
 alias ti="terraform init"
 alias k=kubectl
-alias l="ls -lha"
+alias l="ls -1 -a"
 alias g="lazygit"
 alias gs="git status"
 alias gt="git tag"
+
+alias ls=exa
 
 alias b=bash
 alias path="pwd | pbcopy"
@@ -43,6 +45,9 @@ alias kgn="kubectl get nodes"
 alias wkgn="kubectl get nodes"
 alias al="aws sso login"
 alias ksn="kubectl config set-context --current --namespace"
+
+alias o='code $(fzf)'
+alias cpcommand="fc -ln -1 | pbcopy"
 
 kube() {
   kubectl config use-context $(kubectl config get-contexts -o name | fzf)
@@ -90,6 +95,15 @@ source ~/.pwork
 
 code() {
    open -a Visual\ Studio\ Code.app $1
+}
+
+i() {
+  echo "pwd: $PWD"
+  date "+DATE: %Y-%m-%d%nTIME: %H:%M:%S"
+  echo "Internal IPs:"
+  ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'
+  echo "Public IP: $(curl -s ipinfo.io | jq -r .ip)"
+
 }
 
 export PATH=/usr/local/bin:$PATH
