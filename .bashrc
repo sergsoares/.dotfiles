@@ -111,6 +111,8 @@ i() {
 
 }
 
+alias azrepo="open 'https://dev.azure.com/parfin/Parity/_git/$(basename $(git rev-parse --show-toplevel))'"
+
 export PATH=/usr/local/bin:$PATH
 export PATH=~/.dotfiles/tasks:$PATH
 
