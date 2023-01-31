@@ -17,12 +17,13 @@ alias t=terraform
 alias tap="terraform apply"
 alias ti="terraform init"
 alias k=kubectl
+alias kap="kubectl apply -f "
 alias l="ls -1 -a"
 alias g="lazygit"
 alias gs="git status"
 alias gt="git tag"
 
-alias ls=exa
+#alias ls=exa
 
 alias b=bash
 alias path="pwd | pbcopy"
@@ -109,3 +110,5 @@ i() {
 
 export PATH=/usr/local/bin:$PATH
 export PATH=~/.dotfiles/tasks:$PATH
+
+export PATH=~/go/bin:$PATH
