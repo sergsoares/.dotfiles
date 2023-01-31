@@ -93,7 +93,10 @@ k8s_context(){
 }
 #PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
 
-source ~/.pwork
+if [ -e ~/.bashrc.local ]
+then
+  source ~/.bashrc.local
+fi
 
 code() {
    open -a Visual\ Studio\ Code.app $1
