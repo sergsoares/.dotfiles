@@ -11,6 +11,8 @@ PS1="\[\033[01;32m\]${PS1}\[\033[0m\]"
 #'
 #PS1=${PS1}${NL}
 
+#alias ,="say done"
+alias m=make
 alias edit="vim ~/.dotfiles/.bashrc"
 alias e="vim ~/.dotfiles/.bashrc"
 alias t=terraform
@@ -110,6 +112,10 @@ i() {
   echo "Public IP: $(curl -s ipinfo.io | jq -r .ip)"
 
 }
+
+function enc { openssl bf < $1 > $1.bf ;}
+
+function enc-date { openssl bf < $1 > $(date +"%Y-%m-%d-%H-%M")-$1.bf ;}
 
 export PATH=/usr/local/bin:$PATH
 export PATH=~/.dotfiles/tasks:$PATH
