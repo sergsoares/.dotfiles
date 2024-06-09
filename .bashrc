@@ -1,17 +1,7 @@
-#fish
-
-#PS1=`whoami`' $PWD \n~> ' ; export PS1
+# PS1 Shell definition
 PS1='\n\n${PWD##*/} ~> '
-
 PS1="\[\033[01;32m\]${PS1}\[\033[0m\]"
 
-
-
-#NL='
-#'
-#PS1=${PS1}${NL}
-
-#alias ,="say done"
 alias m=make
 alias edit="vim ~/.dotfiles/.bashrc"
 alias e="vim ~/.dotfiles/.bashrc"
@@ -24,7 +14,6 @@ alias l="ls -1 -a"
 alias g="lazygit"
 alias gs="git status"
 alias gt="git tag"
-
 #alias ls=exa
 
 alias b=bash
@@ -53,19 +42,33 @@ alias ksn="kubectl config set-context --current --namespace"
 alias o='code $(fzf)'
 alias cpcommand="fc -ln -1 | pbcopy"
 
+# kube() {
+#   kubectl config use-context $(kubectl config get-contexts -o name | fzf)
+#   kubectl config set-context --current --namespace="${1:-default}"
+#   #PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
+#   PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
+# }
+
 kube() {
-  kubectl config use-context $(kubectl config get-contexts -o name | fzf)
-  kubectl config set-context --current --namespace="${1:-default}"
-  #PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
-  PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
+  SELECTED_CONFIG_FILE=$(ls -p $HOME/.kube | grep -v / | fzf --border=top --border-label="| Select $HOME/.kube configuration file |")
+  export KUBECONFIG="$HOME/.kube/${SELECTED_CONFIG_FILE}"
+
+  SELECTED_CONTEXT=$(kubectl config get-contexts -o name | fzf --border=top --border-label="| Select K8S Context |")
+  kubectl config use-context "${SELECTED_CONTEXT}"
+
+  SELECTED_NAMESPACE=$(kubectl get namespaces | cut -d ' ' -f1 | fzf --border=top --border-label="| Select K8S Namespace |")
+
+  kubectl config set-context --current --namespace="${SELECTED_NAMESPACE:-default}"
+
+  PS1='[\033[01;32m\]\n\n${PWD##*/} [$(echo ${KUBECONFIG##*/}) - $(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ \[\033[0m\]'
 }
 
 #kn() {
 #  kubectl config set-context --current --namespace=$(kubectl get namespaces | cut -d ' ' -f1 | fzf)
 #}
+
 alias kx='f() { [ "$1" ] && kubectl config use-context $1 || kubectl config current-context ; } ; f'
 alias kn='f() { [ "$1" ] && kubectl config set-context --current --namespace $1 || kubectl config view --minify | grep namespace | cut -d" " -f6 ; } ; f'
-
 
 kdn() {
   kubectl describe node $(kubectl get nodes | fzf | cut -d " " -f1)
@@ -122,5 +125,4 @@ function enc-date { openssl bf < $1 > $(date +"%Y-%m-%d-%H-%M")-$1.bf ;}
 
 export PATH=/usr/local/bin:$PATH
 export PATH=~/.dotfiles/tasks:$PATH
-
 export PATH=~/go/bin:$PATH
