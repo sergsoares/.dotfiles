@@ -4,8 +4,10 @@ PS1="\[\033[01;32m\]${PS1}\[\033[0m\]"
 
 alias m=make
 alias edit="vim ~/.dotfiles/.bashrc"
+alias cicd='git commit --allow-empty -m "[CICD Trigger]" && git push'
 alias e="vim ~/.dotfiles/.bashrc"
 alias t=terraform
+alias tdebug="TF_LOG=debug terraform"
 alias tap="terraform apply"
 alias ti="terraform init"
 alias k=kubectl
