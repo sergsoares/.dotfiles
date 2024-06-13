@@ -4,6 +4,7 @@ PS1="\[\033[01;32m\]${PS1}\[\033[0m\]"
 
 alias m=make
 alias edit="vim ~/.dotfiles/.bashrc"
+alias c="$(which code) ."
 alias cicd='git commit --allow-empty -m "[CICD Trigger]" && git push'
 alias e="vim ~/.dotfiles/.bashrc"
 alias t=terraform
