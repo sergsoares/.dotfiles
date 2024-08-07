@@ -113,9 +113,9 @@ then
   source ~/.bashrc.local
 fi
 
-code() {
-   open -a Visual\ Studio\ Code.app $1
-}
+# code() {
+#    open -a Visual\ Studio\ Code.app $1
+# }
 
 i() {
   echo "pwd: $PWD"
