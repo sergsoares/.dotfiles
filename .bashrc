@@ -2,7 +2,11 @@
 PS1='\n\n${PWD##*/} ~> '
 PS1="\[\033[01;32m\]${PS1}\[\033[0m\]"
 
-alias m=make
+
+# Autocomplete for makefile (https://stackoverflow.com/questions/4188324/bash-completion-of-makefile-target)
+complete -W "\`grep -oE '^[a-zA-Z0-9_.-]+[\\:]*[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sort | uniq | sed 's/[^a-zA-Z0-9_.-]*$//' | sed 's/[\]//g' | fzf\`" make
+
+alias m="grep -oE '^[a-zA-Z0-9_.-]+[\\:]*[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sort | uniq | sed 's/[^a-zA-Z0-9_.-]*$//' | sed 's/[\]//g' | fzf | xargs make $1"
 alias edit="vim ~/.dotfiles/.bashrc"
 alias c="$(which code) ."
 alias cicd='git commit --allow-empty -m "[CICD Trigger]" && git push'
@@ -45,12 +49,12 @@ alias ksn="kubectl config set-context --current --namespace"
 alias o='code $(fzf)'
 alias cpcommand="fc -ln -1 | pbcopy"
 
-# kube() {
-#   kubectl config use-context $(kubectl config get-contexts -o name | fzf)
-#   kubectl config set-context --current --namespace="${1:-default}"
-#   #PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
-#   PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
-# }
+kube_work() {
+  kubectl config use-context $(kubectl config get-contexts -o name | fzf)
+  kubectl config set-context --current --namespace="${1:-default}"
+  #PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
+  PS1='${PWD##*/} [$(kubectl config current-context) - $(kubectl config view --minify -o jsonpath='{..namespace}')] $ '
+}
 
 kube() {
   SELECTED_CONFIG_FILE=$(ls -p $HOME/.kube | grep -v / | fzf --border=top --border-label="| Select $HOME/.kube configuration file |")
