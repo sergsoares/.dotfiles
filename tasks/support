@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+function main() {
+  read -p 'Any name for support: '
+  
+  TRIM=$(echo $REPLY | sed -e 's/\s$//g')
+  NAME=$(echo "${TRIM// /-}")
+  #NAME=$(date +"%Y-%m-%d-%H-%M")"-support-$NAME"
+  NAME=$(date +"%Y-%m-%d")"-$NAME"
+
+  TARGET=$(echo "${HOME}/tasks/${NAME}")
+
+  if [ ! -d "${TARGET}" ] 
+  then
+      echo "Creating folder"
+      mkdir -p "${TARGET}"
+      echo "# Tasks" > "${TARGET}/tasks.xit"
+      echo "# References" > "${TARGET}/refs.md"
+      echo "# Draft" > "${TARGET}/draft.md"
+  fi
+
+  if [ "$(uname)" == "Darwin" ]; then
+    open -a "Visual Studio Code" "${TARGET}"
+  else
+    code "${TARGET}"
+  fi
+}
+
+main

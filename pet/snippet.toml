@@ -1,0 +1,9 @@
+[[snippets]]
+  description = "Show message"
+  command = "echo <msg>"
+  output = ""
+
+[[snippets]]
+  description = "Execute cloudformation with CLI"
+  command = "aws cloudformation create-stack --stack-name <name> --template-body file://<file=cloudformation.yml> --profile=<env=dev> --region=<region=eu-west-2> <capability_iam=--capabilities CAPABILITY_NAMED_IAM> <capability_expand=--capabilities CAPABILITY_AUTO_EXPAND> <capability=--capabilities CAPABILITY_IAM>" 
+  output = ""

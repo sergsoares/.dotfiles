@@ -1,0 +1,112 @@
+#!/bin/bash
+set -e
+
+function main() {
+  select SELECTED_OPTION in create_support create_ticket create_task none 
+  do
+    echo "> Escolheu $SELECTED_OPTION"
+    echo ""
+    $SELECTED_OPTION
+    break;
+  done
+}
+
+function create_support() {
+  read -p 'Any name for support: '
+  
+  TRIM=$(echo $REPLY | sed -e 's/\s$//g')
+  NAME=$(echo "${TRIM// /-}")
+  NAME=$(date +"%Y-%m-%d-%H-%M")"-support-$NAME"
+
+  TARGET=$(echo "${HOME}/tasks/${NAME}")
+
+  if [ ! -d "${TARGET}" ] 
+  then
+    # read -p "Are you sure you wish to create ${TARGET} (yes/no)? "
+    # if [ "$REPLY" == "yes" ]; then
+      echo "Creating folder"
+      mkdir -p "${TARGET}"
+      echo "# Tasks" > "${TARGET}/tasks.xit"
+      echo "# References" > "${TARGET}/refs.md"
+      echo "# Draft" > "${TARGET}/draft.md"
+    # fi
+  fi
+
+  if [ "$(uname)" == "Darwin" ]; then
+    open -a "Visual Studio Code" "${TARGET}"
+  else
+    code "${TARGET}"
+  fi
+}
+
+function create_task() {
+  read -p 'Name of task: '
+  
+  TRIM=$(echo $REPLY | sed -e 's/\s$//g')
+  NAME=$(echo "${TRIM// /-}")
+
+  TARGET=$(echo "${HOME}/tasks/${NAME}")
+
+  if [ ! -d "${TARGET}" ] 
+  then
+    read -p "Are you sure you wish to create ${TARGET} (yes/no)? "
+    if [ "$REPLY" == "yes" ]; then
+      echo "Creating folder"
+      mkdir -p "${TARGET}"
+      echo "# Tasks" > "${TARGET}/tasks.xit"
+      echo "# References" > "${TARGET}/refs.md"
+      echo "# Draft" > "${TARGET}/draft.md"
+    fi
+  fi
+
+  if [ "$(uname)" == "Darwin" ]; then
+    open -a "Visual Studio Code" "${TARGET}"
+  else
+    code "${TARGET}"
+  fi
+}
+
+function create_ticket() {
+  echo "<Subject> ask for help in <system> in <environment>"
+  read -p 'Subjet: '
+  SUBJECT=$(echo $REPLY);
+  echo "$SUBJECT ask for help in <system> in <environment>"
+
+  read -p 'System: '
+  SYSTEM=$(echo $REPLY)
+  echo "$SUBJECT ask for help in $SYSTEM in <environment>"
+
+  read -p 'Environment: '
+  ENV=$(echo $REPLY)
+
+  END_NAME="$SUBJECT ask for help in $SYSTEM in $ENV"
+  echo $END_NAME
+
+  echo $END_NAME | pbcopy
+  echo "Copied name for clipboard"
+
+  TRIM=$(echo $END_NAME | sed -e 's/\s$//g')
+  NAME=$(echo "${TRIM// /-}")
+
+  TARGET=$(echo "${HOME}/tasks/${NAME}")
+
+  if [ ! -d "${TARGET}" ] 
+  then
+    read -p "Are you sure you wish to create ${TARGET} (yes/no)? "
+    if [ "$REPLY" == "yes" ]; then
+      echo "Creating folder"
+      mkdir -p "${TARGET}"
+      echo "# Tasks" > "${TARGET}/tasks.xit"
+      echo "# References" > "${TARGET}/refs.md"
+      echo "# Draft" > "${TARGET}/draft.md"
+    fi
+  fi
+
+  if [ "$(uname)" == "Darwin" ]; then
+    open -a "Visual Studio Code" "${TARGET}"
+  else
+    code "${TARGET}"
+  fi
+}
+
+main

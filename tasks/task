@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+FOLDER=$(ls ~/tasks | fzf )
+TARGET="${HOME}/tasks/${FOLDER}"
+
+
+if [ "$(uname)" == "Darwin" ]; then
+  open -a "Visual Studio Code" "${TARGET}"
+else
+  code "${TARGET}"
+fi
+
+
