@@ -1,10 +1,10 @@
 #!/bin/bash
 
 items=(
-    "https://github.com/sergsoares/.dotfiles" 
-    "https://github.com/sergsoares/sergsoares.github.io" 
-    "https://github.com/sergsoares/personal-lab" 
-    "https://github.com/sergsoares/drafts"
+    "git@github.com:sergsoares/.dotfiles" 
+    "git@github.com:sergsoares/sergsoares.github.io" 
+    "git@github.com:sergsoares/personal-lab" 
+    "git@github.com:sergsoares/drafts"
 )
 choice=$(printf "%s\n" "${items[@]}" | fzf)
 
