@@ -1,0 +1,17 @@
+#!/bin/bash
+
+items=(
+    "https://github.com/sergsoares/.dotfiles" 
+    "https://github.com/sergsoares/sergsoares.github.io" 
+    "https://github.com/sergsoares/personal-lab" 
+    "https://github.com/sergsoares/drafts"
+)
+choice=$(printf "%s\n" "${items[@]}" | fzf)
+
+echo "Cloning ${choice}"
+printf "%s" "Continue? (Y/N): "
+read CONFIRM && [[ $CONFIRM == [yY] || $CONFIRM == [yY][eE][sS] ]] || exit 1
+echo "Creating..."
+echo ""
+
+git clone $choice

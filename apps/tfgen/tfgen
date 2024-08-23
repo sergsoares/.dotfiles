@@ -1,0 +1,103 @@
+#!/bin/bash
+# Unofficial Bash Strict Mode https://gist.github.com/robin-a-meade/58d60124b88b60816e8349d1e3938615
+set -euo pipefail 
+
+main() {
+  printf "%s" "Enter project name: "
+  read NAME
+  if [ -z "${NAME}" ]
+  then
+      echo "Name can't be empty"; exit 1;
+  fi
+
+  ACTUAL_FOLDER=$(basename "$PWD")
+  echo ""
+  echo "> Project Summary: "
+  echo "Name: ${NAME} "
+  echo "Folder that will be installed: ./${ACTUAL_FOLDER} "
+  echo ""
+
+  printf "%s" "Continue? (Y/N): "
+  read CONFIRM && [[ $CONFIRM == [yY] || $CONFIRM == [yY][eE][sS] ]] || exit 1
+  echo "Creating..."
+  echo ""
+
+  mkdir $NAME
+
+  cat << EOF > "${NAME}/.gitignore"
+**/.terraform/*
+kubeconfig*
+*.tfstate
+*.tfstate.*
+crash.log
+tf-plan
+.terraform.lock.hcl
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+**.terraform.lock.hcl
+**/terraform-visual-report/**
+**/plan.out
+**/plan.json
+**/control.tfplan
+**/workspace-local.tf
+**/terraform.tfvars
+**/tf-plan*
+EOF
+
+
+  cat << EOF > "${NAME}/envs.tf"
+locals {
+  env = {
+    name  = "tf-name"
+    items = ["my-items"]
+  }
+}
+EOF
+
+cat << EOF > "${NAME}/providers.tf"
+terraform {
+  backend "s3" {}
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "5.26.0"
+    }
+  }
+}
+EOF
+
+cat << 'EOF' >> "${NAME}/Makefile"
+init:
+	terraform init
+
+plan:
+	terraform plan -out tf-plan
+
+show:
+  terraform show -json tf-plan
+
+apply:
+	terraform apply tf-plan
+
+plan-target:
+	@read -p "What is the target name: " target; \
+	terraform plan -target=$$target -out tf-plan.target -no-color
+
+apply-target:
+	@read -p "What is the target name: " target; \
+	terraform apply -target=$$target tf-plan.target
+
+destroy:
+	terraform destroy
+EOF
+
+cat << EOF > "${NAME}/variables.tf"
+variable "name" {
+  default = "${NAME}"
+}
+EOF
+}
+
+main

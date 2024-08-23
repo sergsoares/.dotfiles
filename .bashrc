@@ -132,6 +132,8 @@ function enc-date { openssl bf < $1 > $(date +"%Y-%m-%d-%H-%M")-$1.bf ;}
 
 export PATH=/usr/local/bin:$PATH
 export PATH=~/.dotfiles/tasks:$PATH
+export PATH=~/.dotfiles/apps/tfgen:$PATH
+export PATH=~/.dotfiles/apps/clone:$PATH
 export PATH=~/go/bin:$PATH
 export PATH=~/.arkade/bin/:$PATH
 export HOMEBREW_NO_AUTO_UPDATE=1
