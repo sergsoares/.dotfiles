@@ -11,7 +11,7 @@ alias edit="vim ~/.dotfiles/.bashrc"
 alias c="$(which code) ."
 alias cicd='git commit --allow-empty -m "[CICD Trigger]" && git push'
 alias e="vim ~/.dotfiles/.bashrc"
-alias t=terraform
+alias tf=terraform
 alias tdebug="TF_LOG=debug terraform"
 alias tap="terraform apply"
 alias ti="terraform init"
@@ -130,10 +130,16 @@ function enc { openssl bf < $1 > $1.bf ;}
 
 function enc-date { openssl bf < $1 > $(date +"%Y-%m-%d-%H-%M")-$1.bf ;}
 
+
+alias t="trun | fzf"
+
+export PATH=~/.dotfiles/apps/trun:$PATH
+
 export PATH=/usr/local/bin:$PATH
 export PATH=~/.dotfiles/tasks:$PATH
 export PATH=~/.dotfiles/apps/tfgen:$PATH
 export PATH=~/.dotfiles/apps/clone:$PATH
+export PATH=~/.dotfiles/apps/trun:$PATH
 export PATH=~/go/bin:$PATH
 export PATH=~/.arkade/bin/:$PATH
 export HOMEBREW_NO_AUTO_UPDATE=1

@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+TASKFILE=tasks.sh
+
+if [[ $# -gt 0 ]]; then
+    source $TASKFILE
+    $@
+else
+    source $TASKFILE
+    declare -F | awk '{print $NF}' | sort | egrep -v "^_" 
+fi
