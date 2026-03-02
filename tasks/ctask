@@ -6,19 +6,53 @@ read -p 'Name of task: '
 TRIM=$(echo $REPLY | sed -e 's/\s$//g')
 NAME=$(echo "${TRIM// /-}")
 
+# read -p 'Prompt for Cursor plan (optional, Enter to skip): ' PROMPT_INPUT
+# PROMPT=$(echo "$PROMPT_INPUT" | sed -e 's/^\s*//' -e 's/\s*$//')
+
 TARGET=$(echo "${HOME}/tasks/${NAME}")
 
-if [ -d "${TARGET}" ] 
-then
-    code "${TARGET}"
+if [ -d "${TARGET}" ]; then
+  # if [ -n "${PROMPT}" ]; then
+  #   cursor "${TARGET}" --mode=plan "${PROMPT}"
+  # else
+    cursor "${TARGET}"
+  # fi
 else  
   read -p "Are you sure you wish to create ${TARGET} (yes/no)? "
   if [ "$REPLY" == "yes" ]; then
     echo "Creating folder"
     mkdir -p "${TARGET}"
+    mkdir -p "${TARGET}/repos"
+    mkdir -p "${TARGET}/tmp"
     echo "# Tasks" > "${TARGET}/tasks.xit"
     echo "# References" > "${TARGET}/refs.md"
     echo "# Draft" > "${TARGET}/draft.md"
-    code "${TARGET}"
+    mkdir -p "${TARGET}/.vscode"
+    COLORS=(
+      "#16213e" "#1b4332" "#3d2463" "#0d3b4a" "#4a1c1c"
+      "#2d1b4e" "#1e3a2f" "#3c2c1e" "#1a2a3e" "#2e1f3d"
+      "#1c3d2e" "#3e1a1a" "#0f2d3a" "#2a1c4a" "#3a2e1a"
+      "#1f2d4a" "#4a2c0d" "#2c1f4a" "#1a4a3a" "#4a0d2c"
+      "#1d3d4a" "#3d1a3a" "#2a3a1a"
+    )
+    IDX=$(( RANDOM % ${#COLORS[@]} ))
+    PICKED="${COLORS[$IDX]}"
+    cat > "${TARGET}/.vscode/settings.json" << EOF
+{
+  "workbench.colorCustomizations": {
+    "sideBar.background": "${PICKED}",
+    "titleBar.activeBackground": "${PICKED}"
+  }
+}
+EOF
+    echo "Cloning repos..."
+    if [ ! -d "${TARGET}/repos/live-infra-atlantis" ]; then git clone --single-branch --branch main git@ssh.dev.azure.com:v3/parfin/SRE/live-infra-atlantis "${TARGET}/repos/live-infra-atlantis"; fi
+    if [ ! -d "${TARGET}/repos/parfin.templates.ci-cd" ]; then git clone --single-branch --branch main git@ssh.dev.azure.com:v3/parfin/Parity/parfin.templates.ci-cd "${TARGET}/repos/parfin.templates.ci-cd"; fi
+    if [ ! -d "${TARGET}/repos/centralized-k8s-resources" ]; then git clone --single-branch --branch main git@ssh.dev.azure.com:v3/parfin/Parity/centralized-k8s-resources "${TARGET}/repos/centralized-k8s-resources"; fi
+    # if [ -n "${PROMPT}" ]; then
+    #   cursor "${TARGET}" --mode=plan "${PROMPT}"
+    # else
+      cursor "${TARGET}"
+    # fi
   fi
 fi

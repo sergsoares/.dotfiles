@@ -21,10 +21,11 @@ function main() {
   fi
 
   if [ "$(uname)" == "Darwin" ]; then
+    #cursor "${TARGET}"
     open -a "Visual Studio Code" "${TARGET}"
   else
     code "${TARGET}"
   fi
 }
 
-main
+
