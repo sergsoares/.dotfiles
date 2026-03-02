@@ -1,0 +1,160 @@
+# Lima VM — Debian 13 Trixie
+# Fully isolated: no host mounts, user-mode NAT only
+#
+# Usage:
+#   limactl start --name=debian13 debian13-isolated.yaml
+#   limactl shell debian13
+#   limactl stop debian13
+#   limactl delete debian13
+
+# ─────────────────────────────────────────────
+# Images — pick your architecture
+# Updated: 2026-02-20 (from cloud.debian.org/images/cloud/trixie/latest)
+# ─────────────────────────────────────────────
+images:
+  # Apple Silicon (M1/M2/M3/M4)
+  - location: "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-arm64.qcow2"
+    arch: aarch64
+  # Intel Mac
+  - location: "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2"
+    arch: x86_64
+
+# ─────────────────────────────────────────────
+# Resources
+# ─────────────────────────────────────────────
+cpus: 2
+memory: "2GiB"
+disk: "20GiB"
+
+# ─────────────────────────────────────────────
+# ISOLATION: No host filesystem access
+# ─────────────────────────────────────────────
+mounts: []          # No shared folders — host disk is invisible to VM
+mountType: "virtiofs"
+
+# ─────────────────────────────────────────────
+# ISOLATION: User-mode network only (no LAN access)
+# The VM can reach the internet but cannot scan or
+# reach your local network (192.168.x.x, NAS, etc.)
+# ─────────────────────────────────────────────
+networks: []        # Disables bridged/vmnet — falls back to user-mode SLIRP NAT
+
+# ─────────────────────────────────────────────
+# Virtualization backend
+# "vz" = Apple Virtualization Framework (fast, macOS 13+)
+# "qemu" = fallback if vz is unavailable
+# ─────────────────────────────────────────────
+vmType: "vz"
+rosetta:
+  enabled: false    # No Rosetta — pure Linux ARM64
+
+# ─────────────────────────────────────────────
+# SSH — forwarded to localhost only, not exposed to LAN
+# ─────────────────────────────────────────────
+ssh:
+  localPort: 2222   # ssh -p 2222 user@localhost  (or use: limactl shell debian13)
+  loadDotSSHPubKeys: true  # inject your ~/.ssh/id_*.pub as authorized keys
+
+# ─────────────────────────────────────────────
+# cloud-init provisioning (runs once on first boot)
+# ─────────────────────────────────────────────
+provision:
+  # System-level setup (runs as root)
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -euo pipefail
+
+      echo "==> System update"
+      apt-get update -y
+      apt-get upgrade -y
+
+      echo "==> Install base tools"
+      apt-get install -y \
+        curl wget git vim htop tmux \
+        build-essential \
+        ca-certificates \
+        unzip zip \
+        jq \
+        net-tools \
+        sudo \
+        gnupg
+
+      echo "==> Install Node.js (required for Claude code CLI)"
+      if ! command -v node >/dev/null 2>&1; then
+        # Install secure keyring and NodeSource for Node.js 20.x LTS
+        ARCH=$(dpkg --print-architecture)
+        NODE_MAJOR=20
+        curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/nodesource.gpg
+        echo "deb [signed-by=/etc/apt/trusted.gpg.d/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+        apt-get update -y
+        apt-get install -y nodejs
+      else
+        echo "Node.js already installed."
+      fi
+
+      echo "==> Install Claude code CLI"
+      # Install the official Claude code CLI globally
+      npm install -g @anthropic-ai/claude-code
+
+      echo "==> Harden SSH (no password auth, no root login)"
+      sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
+      sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+      systemctl restart ssh
+
+      echo "==> Disable unnecessary services"
+      systemctl disable --now multipathd 2>/dev/null || true
+
+      echo "==> System provisioning complete"
+
+  # User-level setup (runs as the default lima user)
+  - mode: user
+    script: |
+      #!/bin/bash
+      set -euo pipefail
+
+      echo "==> User environment setup"
+
+      # Better shell prompt
+      cat >> ~/.bashrc << 'BASHRC'
+      export PS1='\[\e[32m\]\u@debian13\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\$ '
+      export EDITOR=vim
+      export IS_SANDBOX=1
+      BASHRC
+
+      # Optional: install mise (polyglot version manager — replaces nvm/pyenv/rbenv)
+      # curl https://mise.run | sh
+      # echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
+
+      # Create an alias 'yolo' to run Claude code CLI in dangerous mode (user-level, for /etc/bash.bashrc so all users get it)
+      echo "alias yolo='claude code --dangerous-mode'" >> /etc/bash.bashrc
+
+      echo "==> User provisioning complete"
+
+# ─────────────────────────────────────────────
+# Port forwarding (host:guest)
+# Add any ports your workloads need
+# ─────────────────────────────────────────────
+# portForwards:
+#   - guestPort: 80
+#     hostPort: 8080
+#     hostIP: "127.0.0.1"   # bound to localhost only, not exposed on LAN
+#   - guestPort: 443
+#     hostPort: 8443
+#     hostIP: "127.0.0.1"
+#   - guestPort: 3000
+#     hostPort: 3000
+#     hostIP: "127.0.0.1"
+#   - guestPort: 5432   # postgres
+#     hostPort: 5432
+#     hostIP: "127.0.0.1"
+#   - guestPort: 6379   # redis
+#     hostPort: 6379
+#     hostIP: "127.0.0.1"
+
+# ─────────────────────────────────────────────
+# Environment variables passed into the VM
+# ─────────────────────────────────────────────
+env:
+  TZ: "UTC"
+  DEBIAN_FRONTEND: "noninteractive"
