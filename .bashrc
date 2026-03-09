@@ -143,3 +143,34 @@ export PATH=~/.dotfiles/apps/trun:$PATH
 export PATH=~/go/bin:$PATH
 export PATH=~/.arkade/bin/:$PATH
 export HOMEBREW_NO_AUTO_UPDATE=1
+
+# Initialize a Claude Code Docker template in the current (or given) directory.
+init_claude() {
+  local template_dir="${CLAUDE_DOCKER_TEMPLATE_DIR:-$HOME/.dotfiles/docker/claude-code-template}"
+  local target_dir="${1:-$PWD}"
+
+  if [ ! -d "$template_dir" ]; then
+    echo "Claude Docker template not found at: $template_dir" >&2
+    return 1
+  fi
+
+  mkdir -p "$target_dir"
+
+  for filename in Dockerfile docker-compose.yml entrypoint.sh README.md; do
+    if [ -e "$target_dir/$filename" ]; then
+      local backup="${target_dir}/${filename}.bak.$(date +%Y%m%d%H%M%S)"
+      echo "Backing up existing $filename to $backup"
+      cp "$target_dir/$filename" "$backup"
+    fi
+    cp "$template_dir/$filename" "$target_dir/"
+  done
+
+  echo "Claude Code Docker template copied to: $target_dir"
+  echo "Next steps:"
+  echo "  cd \"$target_dir\""
+  echo "  docker compose up --build -d"
+  echo "  docker compose exec claude-code bash"
+  echo "  claude auth login   # first run only"
+}
+alias init-claude=init_claude
+
