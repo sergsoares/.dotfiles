@@ -1,0 +1,44 @@
+services:
+  claude-code:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: claude-code-dev:latest
+    container_name: claude-code-dev
+    working_dir: /workspace
+    # Container runs as the non-root 'claude' user defined in the Dockerfile.
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    environment:
+      - HOME=/home/claude
+      - CLAUDE_HOME=/home/claude
+    volumes:
+      # Persistent home directory for tools and caches (named volume).
+      # - claude-home:/home/claude
+      # Persist Claude auth/config on the host so restarts don't require login.
+      - "${HOME}/.claude:/home/claude/.claude:rw"
+      # Mount the current project into /workspace so Claude and tools see your code.
+      - ./:/workspace:rw
+    # Harden container security.
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # Read-only root filesystem; writable paths are provided via volumes/tmpfs.
+    read_only: true
+    tmpfs:
+      - /tmp
+    # networks:
+    #   - claude_net
+    # Basic resource constraints to prevent runaway usage (Docker Compose-only fields).
+    mem_limit: 4g
+    cpus: 2.0
+
+# networks:
+#   claude_net:
+#     driver: bridge
+
+# volumes:
+#   claude-home:
+
